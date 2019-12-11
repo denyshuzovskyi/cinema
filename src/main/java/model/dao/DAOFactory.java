@@ -11,7 +11,6 @@ public abstract class DAOFactory {
     // implement these methods.
     public abstract UserDAO getUserDAO();
     public abstract FilmDAO getFilmDAO();
-    public abstract PosterDAO getPosterDAO();
 
     //TODO Add getConnection() method or not
 

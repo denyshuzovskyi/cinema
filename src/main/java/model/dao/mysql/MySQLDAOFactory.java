@@ -20,9 +20,4 @@ public class MySQLDAOFactory extends DAOFactory {
     public FilmDAO getFilmDAO() {
         return new MySQLFilmDAO(this);
     }
-
-    @Override
-    public PosterDAO getPosterDAO() {
-        return new MySQLPosterDAO(this);
-    }
 }
