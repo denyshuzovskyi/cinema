@@ -1,5 +1,6 @@
 package controller.services;
 
+import controller.Page;
 import model.dao.DAOFactory;
 import model.dao.FilmDAO;
 import model.entities.Film;
@@ -14,8 +15,8 @@ public class FilmService {
     private DAOFactory MySQLDAOFactory = DAOFactory.getDAOFactory(DAOFactory.MySQl);
     private FilmDAO filmDAO = MySQLDAOFactory.getFilmDAO();
 
-    public String uploadFilm (HttpServletRequest request){
-        String page;
+    public Page uploadFilm (HttpServletRequest request){
+        Page page;
 
         Film film;
 
@@ -52,17 +53,19 @@ public class FilmService {
             filmDAO.create(film);
         }catch (Exception e){
             System.err.println(e);
-            page = ConfigurationManager.getProperty("film_upload_page");
+            page = new Page(ConfigurationManager.getProperty("film_upload_page"), Page.WayToSend.forward);
+
             return page;
         }
 
-        page = ConfigurationManager.getProperty("index_page");
+        page = new Page(ConfigurationManager.getProperty("index_page"), Page.WayToSend.redirect);
 
         return page;
     }
 
-    public String getFilmList(HttpServletRequest request){
-        String page = ConfigurationManager.getProperty("index_page");
+    public Page getFilmList(HttpServletRequest request){
+        Page page = new Page(ConfigurationManager.getProperty("index_page"), Page.WayToSend.forward);
+
         List<Film> films = null;
 
         try {

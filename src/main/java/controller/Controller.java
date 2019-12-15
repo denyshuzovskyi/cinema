@@ -25,7 +25,7 @@ public class Controller extends HttpServlet {
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String page;
+        Page page;
 
         ActionFactory client = new ActionFactory();
         ActionCommand command = client.defineCommand(req);
@@ -33,8 +33,12 @@ public class Controller extends HttpServlet {
         page = command.execute(req);
 
         if(page != null){
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-            dispatcher.forward(req, resp);
+            if (page.getWayToSend() == Page.WayToSend.redirect) {
+                resp.sendRedirect(page.getPagePath());
+            } else { //Page.WayToSend.forward
+                RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page.getPagePath());
+                dispatcher.forward(req, resp);
+            }
         }else {
 
         }

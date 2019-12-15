@@ -1,5 +1,6 @@
 package controller.services;
 
+import controller.Page;
 import model.dao.DAOFactory;
 import model.dao.UserDAO;
 import model.entities.User;
@@ -11,8 +12,8 @@ public class UserService {
     private UserDAO userDAO = MySQLDAOFactory.getUserDAO();
 
 
-    public String registerUser (HttpServletRequest request){
-        String page;
+    public Page registerUser (HttpServletRequest request){
+        Page page;
 
         String surname = request.getParameter("surname");
         String name = request.getParameter("name");
@@ -31,20 +32,21 @@ public class UserService {
         }catch (Exception e){
             System.err.println(e);
 
-            page = ConfigurationManager.getProperty("user_registration_page");
+            page = new Page(ConfigurationManager.getProperty("user_registration_page"), Page.WayToSend.forward);
+
             return page;
         }
 
         //delete user's password
         user.setPassword("");
         request.getSession().setAttribute("user", user);
-        page = ConfigurationManager.getProperty("result_page");
+        page = new Page( ConfigurationManager.getProperty("index_page"), Page.WayToSend.redirect);
 
         return page;
     }
 
-    public String authenticateUser (HttpServletRequest request) {
-        String page;
+    public Page authenticateUser (HttpServletRequest request) {
+        Page page;
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -58,17 +60,18 @@ public class UserService {
         } catch (Exception e) {
             System.err.println(e);
 
-            page = ConfigurationManager.getProperty("login_page");
+            page = new Page(ConfigurationManager.getProperty("login_page"), Page.WayToSend.forward);
+
             return page;
         }
 
         if (user != null) {
             user.setPassword("");
             request.getSession().setAttribute("user", user);
-            page = ConfigurationManager.getProperty("index_page");
+            page = new Page(ConfigurationManager.getProperty("index_page"), Page.WayToSend.redirect);
         } else {
             request.setAttribute("authentication_error_message", "Incorrect email or password");
-            page = ConfigurationManager.getProperty("login_page");
+            page = new Page(ConfigurationManager.getProperty("login_page"), Page.WayToSend.forward);
         }
 
         return page;
